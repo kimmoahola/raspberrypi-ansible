@@ -3,6 +3,8 @@
 
   vars:
     - myself_email: '{{ myself_email_vault }}'
+    - gmail_sender: '{{ gmail_sender_vault }}'
+    - gmail_sender_pass: '{{ gmail_sender_pass_vault }}'
 
   vars_files:
     - secrets.yml
@@ -10,6 +12,9 @@
   handlers:
     - name: Generate aliases
       command: newaliases
+
+    - name: Restart postfix
+      command: systemctl restart postfix.service
 
   tasks:
     - name: Remove unwanted packages
@@ -77,6 +82,31 @@
         regexp: '^root:'
         line: 'root: {{ myself_email }}'
       notify: Generate aliases
+
+    - name: Create /etc/postfix/sasl_passwd
+      template:
+        src: sasl_passwd
+        dest: /etc/postfix/sasl_passwd
+        owner: root
+        group: root
+        mode: u=rw,g=,o=
+      register: sasl_password
+
+    - name: postmap /etc/postfix/sasl_passwd
+      command: postmap /etc/postfix/sasl_passwd
+      notify: Restart postfix
+      when: sasl_password.changed
+
+    - name: Postfix config
+      blockinfile:
+        path: /etc/postfix/main.cf
+        block: |
+          relayhost = [smtp.gmail.com]:587
+          smtp_use_tls = yes
+          smtp_sasl_auth_enable = yes
+          smtp_sasl_security_options =
+          smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+          smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
 
     - name: Apt autoremove
       apt:

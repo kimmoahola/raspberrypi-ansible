@@ -13,9 +13,10 @@
 
   tasks:
     - name: Remove unwanted packages
-      package:
+      apt:
         name: '{{ item }}'
         state: absent
+        purge: yes
       loop:
         - unattended-upgrades
         - apt-listchanges
@@ -32,8 +33,13 @@
         name: Europe/Helsinki
       notify: reboot
 
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
     - name: Install packages
-      package:
+      apt:
         name: '{{ item }}'
         state: present
       loop:
@@ -71,3 +77,9 @@
         regexp: '^root:'
         line: 'root: {{ myself_email }}'
       notify: Generate aliases
+
+    - name: Apt autoremove
+      apt:
+        autoclean: yes
+        autoremove: yes
+        purge: yes

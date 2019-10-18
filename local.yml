@@ -2,12 +2,40 @@
   hosts: localhost
 
   tasks:
+    - name: Swappiness
+      sysctl:
+        name: vm.swappiness
+        value: '1'
+        state: present
+
     - name: Set timezone to Europe/Helsinki
       timezone:
         name: Europe/Helsinki
       notify: reboot
 
-    - name: Install ntp
+    - name: Install packages
       package:
-        name: ntp
+        name: '{{ item }}'
         state: present
+      loop:
+        - ntp
+        - heirloom-mailx
+        - sqlite
+        - libffi-dev
+        - libssl-dev
+        - wiringPi
+        - make
+        - build-essential
+        - zlib1g-dev
+        - libbz2-dev
+        - libreadline-dev
+        - libsqlite3-dev
+        - wget
+        - curl
+        - llvm
+        - libncurses5-dev
+        - libncursesw5-dev
+        - xz-utils
+        - tk-dev
+        - postfix
+        - mailutils

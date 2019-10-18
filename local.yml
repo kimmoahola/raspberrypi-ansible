@@ -33,7 +33,7 @@
         - sqlite
         - libffi-dev
         - libssl-dev
-        - wiringPi
+        - wiringpi
         - make
         - build-essential
         - zlib1g-dev

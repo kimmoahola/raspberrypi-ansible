@@ -1,6 +1,16 @@
 - name: Localhost
   hosts: localhost
 
+  vars:
+    - myself_email: '{{ myself_email_vault }}'
+
+  vars_files:
+    - secrets.yml
+
+  handlers:
+    - name: Generate aliases
+      command: newaliases
+
   tasks:
     - name: Swappiness
       sysctl:
@@ -39,3 +49,10 @@
         - tk-dev
         - postfix
         - mailutils
+
+    - name: Add myself to aliases
+      lineinfile:
+        path: /etc/aliases
+        regexp: '^root:'
+        line: 'root: {{ myself_email }}'
+      notify: Generate aliases

@@ -50,6 +50,13 @@
         - postfix
         - mailutils
 
+    - name: Add pi to aliases
+      lineinfile:
+        path: /etc/aliases
+        regexp: '^pi:'
+        line: 'pi: root'
+      notify: Generate aliases
+
     - name: Add myself to aliases
       lineinfile:
         path: /etc/aliases

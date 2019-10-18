@@ -1,0 +1,13 @@
+- name: Localhost
+  hosts: localhost
+
+  tasks:
+    - name: Set timezone to Europe/Helsinki
+      timezone:
+        name: Europe/Helsinki
+      notify: reboot
+
+    - name: Install ntp
+      package:
+        name: ntp
+        state: present

@@ -110,6 +110,9 @@
 
     - name: Apt autoremove
       apt:
-        autoclean: yes
         autoremove: yes
         purge: yes
+
+    - name: Apt autoclean
+      apt:
+        autoclean: yes

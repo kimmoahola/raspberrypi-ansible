@@ -12,6 +12,15 @@
       command: newaliases
 
   tasks:
+    - name: Remove unwanted packages
+      package:
+        name: '{{ item }}'
+        state: absent
+      loop:
+        - unattended-upgrades
+        - apt-listchanges
+        - exim4
+
     - name: Swappiness
       sysctl:
         name: vm.swappiness

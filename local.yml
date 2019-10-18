@@ -107,6 +107,7 @@
           smtp_sasl_security_options =
           smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
           smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+      notify: Restart postfix
 
     - name: Apt autoremove
       apt:

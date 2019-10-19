@@ -117,3 +117,13 @@
     - name: Apt autoclean
       apt:
         autoclean: yes
+
+- name: gin
+  hosts: gin
+
+  tasks:
+
+    - name: Copy test file
+      copy:
+        content: 'test test'
+        dest: /tmp/test
